@@ -3,6 +3,8 @@ package main
 import (
 	"context"
 	"fmt"
+	"os"
+	"os/signal"
 
 	"github.com/Emmanuelishola123/microservices-with-go-reddis/app"
 )
@@ -10,7 +12,10 @@ import (
 func main() {
 	app := app.NewApp()
 
-	err := app.Start((context.TODO()))
+	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt)
+	defer cancel()
+
+	err := app.Start((ctx))
 
 	if err != nil {
 		fmt.Println("failed to start app: ", err)
